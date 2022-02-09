@@ -10,6 +10,11 @@
       :disabled="store.selectedWeek === ''"
     />
   </div>
+  <TableGrid
+    class="mt-6"
+    :cells="store.cells"
+    :headers="store.datesInWeek"
+  />
 </template>
 
 <script setup lang="ts">
@@ -18,6 +23,7 @@ import { useGoogleSheets, useGapi } from 'utils/google-api-helper'
 import { useBookingStore } from './store/booking-store'
 import { sheetId } from 'config/google-config.json'
 import WeekSelect from './components/WeekSelect.vue'
+import TableGrid from './components/TableGrid.vue'
 
 const gapi = useGapi()
 const store = useBookingStore()
