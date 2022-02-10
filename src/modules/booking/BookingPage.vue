@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useGoogleSheets, useGapi } from 'utils/google-api-helper'
+import { useGoogleSheets, useGapi, toCellId } from 'utils/google-api-helper'
 import { useBookingStore } from './store/booking-store'
 import { useLoginStore } from 'modules/login/store/login-store'
 import { sheetId } from 'config/google-config.json'
@@ -31,8 +31,6 @@ import TableGrid from './components/TableGrid.vue'
 const gapi = useGapi()
 const store = useBookingStore()
 const { name } = storeToRefs(useLoginStore())
-
-const columns = ['B', 'C', 'D', 'E', 'F']
 
 // this gets called when the component is rendered on the page
 onMounted(async () => {
@@ -53,10 +51,14 @@ const cellClicked = async (rowId: number, colId: number, value: string) => {
     return
   }
 
-  const cell = `${columns[colId]}${rowId + 2}`
+  // reset the cell if we clicked the cell that already contained our name
+  const valueToWrite = value === name.value
+    ? ''
+    : name.value
 
+  const cell = toCellId(rowId, colId)
   const sheets = await useGoogleSheets(gapi)
-  await store.updateCell(sheets, sheetId, store.selectedWeek, cell, name.value)
+  await store.updateCell(sheets, sheetId, store.selectedWeek, cell, valueToWrite)
 }
 
 </script>
