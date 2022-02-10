@@ -127,6 +127,16 @@ export const useBookingStore = defineStore('booking', {
         error
       }
     },
+    /**
+     * This action updates the value of a cell and fetches the most up to date values
+     * of all the cells.
+     * 
+     * @param resource - The `SpreadsheetsResource` from Google API Client 
+     * @param spreadsheetId - The ID of the spreadsheet you want to read from/write to
+     * @param sheet - This is the sheet name; i.e. `'W/C 31.01.2022'`
+     * @param cell - The cell we will be writing to; i.e. `B2`
+     * @param value - The value we want to write to the cell
+     */
     async updateCell(
       resource: gapi.client.sheets.SpreadsheetsResource,
       spreadsheetId: string,
@@ -137,7 +147,7 @@ export const useBookingStore = defineStore('booking', {
       try {
         const range = `${sheet}!${cell}`
 
-        const { status, result } = await resource.values.update({
+        const { status } = await resource.values.update({
           spreadsheetId,
           range,
           valueInputOption: 'USER_ENTERED',
