@@ -14,6 +14,7 @@
     class="mt-6"
     :cells="store.cells"
     :headers="store.datesInWeek"
+    @cell-click="cellClicked"
   />
 </template>
 
@@ -39,5 +40,9 @@ watch(() => store.selectedWeek, async () => {
   const sheets = await useGoogleSheets(gapi)
   await store.getCells(sheets, sheetId, store.selectedWeek)
 })
+
+const cellClicked = (rowId: number, colId: number, value: string) => {
+  console.log(rowId, colId, value)
+}
 
 </script>

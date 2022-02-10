@@ -36,7 +36,7 @@
             :key="ci"
             class="border-t cursor-pointer"
             :class="{
-              'bg-zinc-300/30 dark:bg-zinc-700/30 !cursor-not-allowed': !!cell,
+              'bg-zinc-300/30 dark:bg-zinc-700/30': !!cell,
               'border-r': (ci + 1) % 5 !== 0,
             }"
             :title="cell"
@@ -59,14 +59,12 @@ interface TableGridProps {
   headers: string[]
 }
 
+interface TableGridEmits {
+  (event: 'cellClick', rowId: number, colId: number, value: string): void
+}
+
 defineProps<TableGridProps>()
 
-const onCellClick = (ri: number, ci: number, value: string) => {
-  if (value) {
-    return
-  }
-
-  const cols = ['B', 'C', 'D', 'E', 'F']
-  alert(`cell ${cols[ci]}${ri+2}`)
-}
+const emit = defineEmits<TableGridEmits>()
+const onCellClick = (ri: number, ci: number, value: string) => emit('cellClick', ri, ci, value)
 </script>
