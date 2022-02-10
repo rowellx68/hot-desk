@@ -123,8 +123,36 @@ export const useBookingStore = defineStore('booking', {
         this.$patch({
           cells,
         })
-      } catch {
-        alert('Whoops')
+      } catch (error) {
+        error
+      }
+    },
+    async updateCell(
+      resource: gapi.client.sheets.SpreadsheetsResource,
+      spreadsheetId: string,
+      sheet: string,
+      cell: string,
+      value: string,
+    ) {
+      try {
+        const range = `${sheet}!${cell}`
+
+        const { status, result } = await resource.values.update({
+          spreadsheetId,
+          range,
+          valueInputOption: 'USER_ENTERED',
+        }, {
+          range,
+          values: [[value]],
+        })
+
+        if (status !== 200) {
+          return
+        }
+
+        await this.getCells(resource, spreadsheetId, sheet)
+      } catch (error) {
+        error
       }
     },
   },
