@@ -20,14 +20,19 @@
 
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useGoogleSheets, useGapi } from 'utils/google-api-helper'
 import { useBookingStore } from './store/booking-store'
+import { useLoginStore } from 'modules/login/store/login-store'
 import { sheetId } from 'config/google-config.json'
 import WeekSelect from './components/WeekSelect.vue'
 import TableGrid from './components/TableGrid.vue'
 
 const gapi = useGapi()
 const store = useBookingStore()
+const { name } = storeToRefs(useLoginStore())
+
+const columns = ['B', 'C', 'D', 'E', 'F']
 
 // this gets called when the component is rendered on the page
 onMounted(async () => {
@@ -41,8 +46,17 @@ watch(() => store.selectedWeek, async () => {
   await store.getCells(sheets, sheetId, store.selectedWeek)
 })
 
-const cellClicked = (rowId: number, colId: number, value: string) => {
-  console.log(rowId, colId, value)
+const cellClicked = async (rowId: number, colId: number, value: string) => {
+  if (!!value && value.toLocaleLowerCase().trim() !== name.value.toLocaleLowerCase().trim()) {
+    alert('Not allowed')
+
+    return
+  }
+
+  const cell = `${columns[colId]}${rowId + 2}`
+
+  const sheets = await useGoogleSheets(gapi)
+  await store.updateCell(sheets, sheetId, store.selectedWeek, cell, name.value)
 }
 
 </script>
