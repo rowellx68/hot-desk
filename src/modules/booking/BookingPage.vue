@@ -10,12 +10,13 @@
       :disabled="store.selectedWeek === ''"
     />
   </div>
-  <TableGrid
+  <!-- <TableGrid
     class="mt-6"
     :cells="store.cells"
     :headers="store.datesInWeek"
     @cell-click="cellClicked"
-  />
+  /> -->
+  <Map class="mt-6 rounded-lg overflow-hidden bg-zinc-700/30" />
 </template>
 
 <script setup lang="ts">
@@ -27,6 +28,7 @@ import { useLoginStore } from 'modules/login/store/login-store'
 import { sheetId } from 'config/google-config.json'
 import WeekSelect from './components/WeekSelect.vue'
 import TableGrid from './components/TableGrid.vue'
+import Map from './components/Map.vue'
 
 const gapi = useGapi()
 const store = useBookingStore()

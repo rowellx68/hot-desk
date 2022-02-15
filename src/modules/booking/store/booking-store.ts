@@ -35,6 +35,7 @@ export const useBookingStore = defineStore('booking', {
       sheets: [] as string[],
       selectedWeek: '',
       cells: [] as string[][],
+      activeDay: 0 as 0 | 1 | 2 | 3 | 4,
     }
   },
   getters: {
@@ -46,6 +47,15 @@ export const useBookingStore = defineStore('booking', {
       const wc = parse(this.selectedWeek, '\'W/C\' dd.MM.yyyy', Date.now())
 
       return [0, 1, 2, 3, 4].map(d => format(addDays(wc, d), 'do MMM'))
+    },
+    cellsForDay() {
+      if (this.cells.length === 0) {
+        return []
+      }
+
+      const day: string[] = this.cells.map(c => c[this.activeDay])
+
+      return day
     },
   },
   actions: {
