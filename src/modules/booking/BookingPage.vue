@@ -17,6 +17,11 @@
     @cell-click="cellClicked"
   /> -->
   <Map class="mt-6 rounded-lg overflow-hidden bg-zinc-700/30" />
+  <WeekdaySelect
+    v-model="store.activeDay"
+    :dates-in-week="store.datesInWeek"
+    class="mt-4"
+  />
 </template>
 
 <script setup lang="ts">
@@ -28,6 +33,7 @@ import { useLoginStore } from 'modules/login/store/login-store'
 import { sheetId } from 'config/google-config.json'
 import WeekSelect from './components/WeekSelect.vue'
 import TableGrid from './components/TableGrid.vue'
+import WeekdaySelect from './components/WeekdaySelect.vue'
 import Map from './components/Map.vue'
 
 const gapi = useGapi()
