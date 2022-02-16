@@ -1,9 +1,15 @@
 <template>
-  <TabGroup @change="onChange">
-    <TabList class="flex p-1 space-x-1 bg-zinc-900/20 rounded-xl">
+  <TabGroup
+    :default-index="modelValue"
+    @change="onChange"
+  >
+    <TabList
+      :selected-index="modelValue"
+      class="flex p-1 space-x-1 bg-zinc-900/30 rounded-b-xl"
+    >
       <Tab
-        v-for="(day) in datesInWeek"
-        :key="day"
+        v-for="(day, i) in datesInWeek"
+        :key="i"
         v-slot="{ selected }"
         as="template"
       >
@@ -27,7 +33,6 @@
 
 <script setup lang="ts">
 import { TabGroup, TabList, Tab } from '@headlessui/vue'
-import { useBookingStore } from 'modules/booking/store/booking-store'
 
 interface WeekdaySelectProps {
   modelValue: number

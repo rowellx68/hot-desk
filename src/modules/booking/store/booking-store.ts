@@ -57,6 +57,12 @@ export const useBookingStore = defineStore('booking', {
 
       return day
     },
+    activeDayColumn() {
+      const col = ['B', 'C', 'D', 'E', 'F'].at(this.activeDay)
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return col!
+    },
   },
   actions: {
     /**
@@ -95,6 +101,7 @@ export const useBookingStore = defineStore('booking', {
         this.$patch({
           sheets,
           selectedWeek,
+          activeDay: 0,
         })
       } catch (error) {
         error

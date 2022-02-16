@@ -1,8 +1,6 @@
 <template>
   <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
-    <h1 class="md:col-span-4">
-      Desk Booking
-    </h1>
+    <h1 class="md:col-span-4">Desk Booking</h1>
     <WeekSelect
       v-model="store.selectedWeek"
       class="md:col-span-2"
@@ -15,13 +13,12 @@
     :cells="store.cells"
     :headers="store.datesInWeek"
     @cell-click="cellClicked"
-  /> -->
-  <Map class="mt-6 rounded-lg overflow-hidden bg-zinc-700/30" />
-  <WeekdaySelect
-    v-model="store.activeDay"
-    :dates-in-week="store.datesInWeek"
-    class="mt-4"
+  />-->
+  <Map
+    class="mt-6 rounded-t-lg overflow-hidden bg-zinc-200 dark:bg-zinc-700/30"
+    @desk-click="deskClicked"
   />
+  <WeekdaySelect v-model="store.activeDay" :dates-in-week="store.datesInWeek" />
 </template>
 
 <script setup lang="ts">
@@ -67,6 +64,18 @@ const cellClicked = async (rowId: number, colId: number, value: string) => {
   const cell = toCellId(rowId, colId)
   const sheets = await useGoogleSheets(gapi)
   await store.updateCell(sheets, sheetId, store.selectedWeek, cell, valueToWrite)
+}
+
+const deskClicked = async (cellId: string, value: string) => {
+  console.log(cellId, value)
+
+  // the code below will be how we'll write to a cell
+  // const valueToWrite = value === name.value
+  //   ? ''
+  //   : name.value
+
+  // const sheets = await useGoogleSheets(gapi)
+  // await store.updateCell(sheets, sheetId, store.selectedWeek, cellId, valueToWrite)
 }
 
 </script>

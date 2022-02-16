@@ -14,6 +14,10 @@ import { useBookingStore } from 'modules/booking/store/booking-store'
 import seats from 'assets/seats-landscape.svg?raw'
 import { createChartOptions } from '../utils/map-helper'
 
+interface MapEmits {
+  (event: 'deskClick', cellId: string, value: string): void
+}
+
 echarts.use([TooltipComponent, GeoComponent, SVGRenderer])
 
 const mapArea = ref<HTMLDivElement>()
@@ -25,12 +29,18 @@ const resizeChart = () => {
 }
 
 const store = useBookingStore()
+const emits = defineEmits<MapEmits>()
 
 watch(() => [store.activeDay, store.selectedWeek, store.cellsForDay], () => {
   const options = createChartOptions(store.cellsForDay)
 
   map?.setOption(options)
 })
+
+const onDeskClicked = (deskNumber: number) => {
+  const value = store.cellsForDay.at(deskNumber - 1) ?? ''
+  emits('deskClick', `${store.activeDayColumn}${deskNumber + 1}`, value)
+}
 
 onMounted(() => {
   if (!mapArea.value) {
@@ -39,8 +49,11 @@ onMounted(() => {
   const options = createChartOptions(store.cellsForDay)
 
   map = echarts.init(mapArea.value)
-  map.on('geoselectchanged', (selection: any) => {
-    console.log(selection.name)
+  map.on('geoselectchanged', (selection: unknown) => {
+    const { name } = selection as { name: string }
+    const deskNumber = parseInt(name)
+
+    onDeskClicked(deskNumber)
   })
   map.setOption(options)
 
